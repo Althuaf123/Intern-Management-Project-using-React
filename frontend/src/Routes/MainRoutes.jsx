@@ -1,17 +1,33 @@
 import React from "react";
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import LandingPage from "../Pages/LandingPage";
+import { Route, Routes } from 'react-router-dom';
+import PublicRoute from "../utils/PublicRoutes";
+import ProtectedRoute from '../utils/ProtectedRoute'
 
+
+import LandingPage from "../Pages/LandingPage";
+import Signup from "../Components/Signup/Signup";
+import Login from "../Components/Login/Login";
+
+import HomePage from "../Pages/HomePage";
 
 const MainRoutes = () => {
     return (
         <div>
-            <Router>
-                <Routes>
-                    <Route exact path="/" element={<LandingPage />}/>
-                    <Route path = "/signup" />
-                </Routes>
-            </Router>
+           
+            <Routes>
+            <Route path = "/homepage" element={<LandingPage />}/>
+            
+            
+            <Route element={<PublicRoute/>}>
+                <Route path = "/signup" element={<Signup />}/>
+                <Route path = "/login" element={<Login />} />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+                <Route exact path="/" element={<HomePage />}/>
+            </Route>
+            </Routes>
+        
         </div>
     )
 }

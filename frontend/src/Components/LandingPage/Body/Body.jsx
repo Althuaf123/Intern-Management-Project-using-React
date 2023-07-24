@@ -15,7 +15,7 @@ function Body(){
        container spacing={2}
        alignItems={"center"}
        justifyContent={'center'}
-       sx={{marginTop : '1px', backgroundColor : '#2F4550', height : '8rem'}}
+       sx={{marginTop : '1px', backgroundColor : '#2F4550', minHeight : '8rem'}}
        > 
         <Grid item xs={12} sm={6}>
             <Typography 
@@ -46,11 +46,12 @@ function Body(){
       <Grid 
       container spacing={2} 
       alignItems="center" 
-      sx={{ marginTop: '1px', backgroundColor : '#E6DB74', height : '20rem' }}
+      sx={{ marginTop: '1px', backgroundColor : '#E6DB74' , minHeight:'25rem' }}
       >
         <Grid 
         item xs={12} 
-        sm={6} 
+        sm={6}
+        lg={6}
         sx={{marginLeft : '5%'}}
         >
           <Paper 

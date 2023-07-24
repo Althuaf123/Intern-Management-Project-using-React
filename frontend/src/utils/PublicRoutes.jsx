@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import { Navigate,Outlet } from 'react-router-dom'
 
 function PublicRoutes() { 
-    const authState = useSelector(state => state.auth)
+    const authState = useSelector(state => state.login)
     return (
-        !authState.auth ? <Outlet/> : <Navigate to='/' />
+        !authState.isAuthenticated ? <Outlet/> : <Navigate to='/' />
     )
 }
 
