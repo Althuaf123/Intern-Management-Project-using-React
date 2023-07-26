@@ -137,7 +137,35 @@ class InternEditSerializer(serializers.ModelSerializer):
         return data
  
 
+class SetPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField()
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    class Meta:
+        fields = '__all__'
 
+    def validate(self, attrs):
+        print(attrs)
+        password = attrs.get('password')
+        token = attrs.get('token')
+        uid = attrs.get('uid')
+        if uid and token:
+            uid_decoded = force_str(urlsafe_base64_decode(uid))
+            user = UserAccount.objects.get(id = uid_decoded)
+            attrs['user_id'] = uid_decoded
+            # Validate the token and decode
+            is_token_valid = default_token_generator.check_token(user, token)
+            if is_token_valid:
+                try:
+                    validate_password(password, user)
+                except exceptions.ValidationError as e:
+                    serializer_errors = serializers.as_serializer_error(e)
+                    raise exceptions.ValidationError(
+                        {"password": serializer_errors["errors"]}
+                    )
+                return attrs
+            else: 
+                raise exceptions.ValidationError('Invalid token')
 
 
          

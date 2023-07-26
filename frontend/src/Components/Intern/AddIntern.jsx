@@ -140,7 +140,7 @@ function AddIntern () {
           </Grid>
           <Grid item xs={12}>
           <FormControl fullWidth >
-          <InputLabel>Level</InputLabel>
+          <InputLabel>Batch</InputLabel>
             <Select
               label="Batch"
               name="batch"

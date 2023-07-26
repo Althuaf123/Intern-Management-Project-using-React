@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Grid, Typography, TextField, Button, Container, Box  } from '@mui/material'
+import { Grid, Typography, TextField, Button, Container, Box, Snackbar } from '@mui/material'
 import Link from "@mui/material/Link";
+import MuiAlert from '@mui/material/Alert';
+
 // import axios from "../../axios";
 import { loginUser } from "../../Reducers/LoginReducer";
 
@@ -14,7 +16,9 @@ const initialError = {
 }
 const Login = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useDispatch()
+    const [snackbar, setSnackbar] = useState(false)
     const [user, setUser] = useState({
       email: 'kiran@gmail.com',
       password: 'althuaf@123'
@@ -25,6 +29,9 @@ const Login = () => {
     const { loading, success, error } = useSelector((state) => state.login);
 
   useEffect(() => {
+    if (location.state && location.state.setPassword){
+      setSnackbar(true)
+    }
     console.log(error);
   }, [error]);
 
@@ -33,6 +40,11 @@ const Login = () => {
       navigate("/homepage");
     }
   }, [success]);
+
+  const handleSnackbarClose = () => {
+    setSnackbar(false)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newDataErrors={
@@ -50,6 +62,8 @@ const Login = () => {
 
     }
   };
+
+
   const handleChange = (event) => {
     const {name}=event.target
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -58,22 +72,8 @@ const Login = () => {
       [name]: false,
     }));
   };
-    // const [email,setEmail] = useState('')
-    // const [password,setPassword] = useState('')
 
-    // const handleSubmit = async (e) => {
-    //   e.preventDefault()
 
-    //   try {
-    //     await axios.post('api/login/', {
-    //       email: email,
-    //       password: password,
-    //     });
-    //     navigate('/');
-    //   } catch (error) { console.log(error);}
-      
-
-    // }
 
     return (
         <Box sx={{ border: '1px red solid', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',backgroundColor: '#E0DDCA' }}>
@@ -147,6 +147,11 @@ const Login = () => {
             </Link>
       </Container>
     </Grid>
+    <Snackbar open={snackbar}  autoHideDuration={5000} onClose={handleSnackbarClose}>
+        <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+         Password set Successfully!
+        </MuiAlert>
+    </Snackbar>
         </Box>
     )
 }

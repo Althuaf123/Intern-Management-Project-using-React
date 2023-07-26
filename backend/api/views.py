@@ -159,7 +159,25 @@ class EditIntern(APIView):
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
     
 
+class SetPassword(APIView):
 
+    def post(self, request, fromat=None):
+        print(request.data)
+        serializer = SetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = UserAccount.objects.get(id=serializer.validated_data['user_id'])
+            password = serializer.validated_data['password']
+
+            user.set_password(password) 
+            user.save()
+            res = {
+                "email":user.email,
+                'message':"Password set successfully"
+            }
+            return Response(res,status=201)
+
+        else:
+            return Response(serializer.errors,status=400)
 
         
 
