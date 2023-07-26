@@ -11,29 +11,28 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post("/api/login/", user);
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
+      localStorage.setItem("id", response.data.data.id)
+      console.log(response.data.data.id)
       
-      const users = await axios.get("/api/", {
-        params: {
-          email: user.email
-        }
-      });
-      console.log(response)
-      console.log(response.data)
-      const userData = users.data;
+      // const users = await axios.get("/api/", {
+      //   params: {
+      //     email: user.email
+      //   }
+      // });
+      // console.log(response)
+      // console.log(response.data)
+      // if (response.data.is_administrator===true){
+      //   const administrator = await axios.get(`api/get/users/${response.data.id}`)
+      //   console.log(administrator)
+      //   localStorage.setItem("administrator",JSON.stringify(administrator.data))
+      // }
 
-      localStorage.setItem("user", JSON.stringify(userData));
-      if (users.data.is_administrator===true){
-        const administrator = await axios.get(`api/get/users/${userData.id}`)
-        console.log(administrator)
-        localStorage.setItem("administrator",JSON.stringify(administrator.data))
-      }
-
-      console.log(users)
+      // console.log(users)
       return response.data;
     } catch (error) {
       console.log(error.response.data);
       return rejectWithValue(error.response.data);
-    }
+    } 
   }
 );
 
@@ -45,7 +44,7 @@ const initialState = {
   success: false,
   error: {},
   isAuthenticated: token?true:false,
-  user: JSON.parse(localStorage.getItem("user")) || {},
+  // user: JSON.parse(localStorage.getItem("user")) || {},
   access: localStorage.getItem("access"),
   refresh: localStorage.getItem("refresh")
 };

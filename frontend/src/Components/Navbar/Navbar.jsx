@@ -22,7 +22,7 @@ function Navbar() {
 
   return (
     <Box sx={{flexGrow: 1}}>
-      <AppBar sx={{ backgroundColor : '#FAFAF5' }}  position="static">
+      <AppBar sx={{ backgroundColor : '#FAFAF5' }}  position="fixed">
         <Toolbar>
           <IconButton
             size="large"

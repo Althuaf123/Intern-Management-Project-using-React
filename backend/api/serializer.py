@@ -3,8 +3,15 @@ from django.core import exceptions
 from rest_framework import serializers
 from django.contrib.auth import get_user_model,authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
 from .models import *
-
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
 
 class UserCreateSerializer(serializers.ModelSerializer):
     company = serializers.CharField()   
@@ -42,7 +49,8 @@ class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     class Meta:
         model = UserAccount
-        fields = ['email', 'password']
+        fields = [ 'id','email', 'password']
+    
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -59,14 +67,81 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserAccount
         fields = "__all__" 
 
-    # class Meta:
-    #     model = UserAccount
-    #     fields = (
-    #         "id",
-    #         "name",
-    #         "email",
-    #         "image"
-    #     )
+
+class BatchCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Batch
+        fields = '__all__'
+
+class BatchEditSerializer(serializers.ModelField):
+    class Meta:
+        model = Batch
+        fields = ['batch_num']
+
+class InternCreateSerializer(serializers.ModelSerializer):
+
+    is_cc = serializers.BooleanField(default=False)
+    is_mentor = serializers.BooleanField(default=False)
+    is_sc = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = Intern
+        fields = ['id','user','batch_id','is_cc','is_mentor','is_sc']
+
+    def create(self,validated_data):
+        print(validated_data)
+        user_data = validated_data.get('user')
+        print(user_data,validated_data.get('user'))
+        batch_id = validated_data.get('batch_id')
+        
+        user_account = UserAccount.objects.get(email = user_data)
+
+        user_account.is_cc = validated_data.get('is_cc', False)
+        user_account.is_mentor = validated_data.get('is_mentor', False)
+        user_account.is_sc = validated_data.get('is_sc', False)
+
+        user_account.is_administrator = False
+
+        user_account.save()
+
+        intern = Intern.objects.create(user = user_account, batch_id = batch_id)
+
+        
+
+        return intern
+    
+
+class InternEditSerializer(serializers.ModelSerializer):
+    is_cc = serializers.BooleanField(default=False)
+    is_mentor = serializers.BooleanField(default=False)
+    is_sc = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = Intern
+        fields = ['id', 'user', 'batch_id', 'is_cc', 'is_mentor', 'is_sc']
+
+    def update(self, data, validated_data):
+        user_data = validated_data.pop('user')
+
+        data.user.is_cc = validated_data.get('is_cc', False)
+        data.user.is_mentor = validated_data.get('is_mentor', False)
+        data.user.is_sc = validated_data.get('is_sc', False)
+
+        data.user.save()
+
+        data.batch_is = validated_data.get('batch_id', data.batch_id)
+
+        data.save()
+
+        return data
+ 
+
+
+
+
+         
+
 
 # class ImageSerializer(serializers.ModelSerializer):
 #     image = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)

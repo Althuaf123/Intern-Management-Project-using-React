@@ -38,8 +38,8 @@ class UserAccount(AbstractBaseUser):
     name = models.CharField(max_length = 50,blank=False)
     email  = models.EmailField(max_length = 100, unique = True,blank=False)
     image = models.ImageField(upload_to='profiles/', blank=True,null=True)
-    date_joined = models.DateField(auto_now_add = True)
-    last_login = models.DateField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add = True)
+    last_login = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_block = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -72,10 +72,14 @@ class Administrator(models.Model):
         return f'{self.user.name} - {self.company}'
 
 class Batch(models.Model):
-    administrator = models.OneToOneField(Administrator, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     batch_num = models.CharField(max_length=50)
-
+    def __str__(self):
+        return self.batch_num
 class Intern(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
-    batch_id = models.OneToOneField(Batch,on_delete=models.CASCADE)
+    batch_id = models.ForeignKey(Batch,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user}-{self.batch_id}'

@@ -8,6 +8,10 @@ from .serializer import *
 from .models import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from .renderers import UserRenderer
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 class SignUp(GenericAPIView):
     serializer_class = UserCreateSerializer
@@ -32,27 +36,21 @@ class SignUp(GenericAPIView):
 class Login(GenericAPIView):
     renderer_classes = [UserRenderer]
     def post(self, request, format = None):
-        # data = request.data
         serializer = LoginSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception = True):
             email = serializer.data.get('email')
             password = serializer.data.get('password')
             user = authenticate(email = email,password = password)
-            print(user)
-            print(email)
-            print(password)
- 
 
             if user is not None:
                 refresh = RefreshToken.for_user(user)
-                return Response({'message':'Successfully Logged In','access' : str(refresh.access_token),'refresh':str(refresh)})
+                serialized_user =  LoginSerializer(user)
+                return Response({'message':'Successfully Logged In','access' : str(refresh.access_token),'refresh':str(refresh), 'data' : serialized_user.data})
             
             else:
                 return Response({'error':{'non_field_errors':['Email or Password is wrong']}},status = status.HTTP_400_BAD_REQUEST)
-            
-
-        
+                     
 
 class Logout(APIView):
     def post(self,request):
@@ -65,6 +63,10 @@ class Logout(APIView):
         except Exception as e:
             return Response({'message':'Login first!'},status=status.HTTP_400_BAD_REQUEST)
         
+# class CreateIntern(APIView) :
+#     def post(self, request) : 
+#         data = request.data
+#         serializers = InternCreateSerializer.data
 
 class ViewInterns(APIView):
 
@@ -74,10 +76,96 @@ class ViewInterns(APIView):
 
         return Response(serialized.data)
     
-class ViewAdministrator(APIView):
+class CreateBatch(APIView):
 
-    def get(self, request):
-        administrator = UserAccount.objects.filter(is_administrator = True)
+    def post(self, request):
+        serializer = BatchCreateSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print(request.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class ViewBatch(APIView):
+    def get(self,request):
+        data = Batch.objects.all()
+        serialized = BatchCreateSerializer(data, many=True)
+        return Response(serialized.data)
+    
+
+class Editbatch(APIView):
+    def patch(self, request, id):
+        batch = Batch.objects.get(id=id)
+        serializer = BatchEditSerializer(batch, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteBatch(APIView):
+    def delete(self,request, id):
+        batch = Batch.objects.get(id=id)
+        print(batch)
+        batch.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    
+
+class CreateIntern(APIView):
+    def post(self,request):
+        data = request.data.copy()
+        email = data.pop('email')
+        name = data.pop('name')
+        print(email,name)
+        user = UserAccount.objects.create(email = email,name=name)
+        print(user)
+        data['user'] = user.id
+        print(data)
+        serializer = InternCreateSerializer(data=data)
+
+        if serializer.is_valid():
+            intern = serializer.save()
+
+            uid = urlsafe_base64_encode(force_bytes(user.id))
+            token = default_token_generator.make_token(user)
+            # reset_url = reverse('password_reset_confirm', args=[uid, token])
+            subject = 'MEG - Set new password'
+            message = 'Click teh link below to set your password.\n\n'
+            message += f'http://localhost:3000/set-password/{uid}/{token}'
+            send_mail(
+                        subject=subject,
+                        message=message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+class EditIntern(APIView):
+
+    def patch(self,request, id):
+        intern = Intern.objects.get(id=id)
+        serializer = InternEditSerializer(intern, data=request.data, partial = True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+        
+
+        
+
+
 class GetUser(APIView):
 
     def get(self, request):

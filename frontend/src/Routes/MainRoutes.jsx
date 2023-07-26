@@ -9,6 +9,9 @@ import Signup from "../Components/Signup/Signup";
 import Login from "../Components/Login/Login";
 
 import HomePage from "../Pages/HomePage";
+import BatchViewPage from "../Pages/BatchViewPage";
+import InternAdd from "../Pages/InternAdd";
+import Setpassword from "../Components/Password/SetPassword";
 
 const MainRoutes = () => {
     return (
@@ -16,6 +19,7 @@ const MainRoutes = () => {
            
             <Routes>
             <Route path = "/homepage" element={<LandingPage />}/>
+            <Route path = "/set-password/:uid/:token" element={<Setpassword />} />
             
             
             <Route element={<PublicRoute/>}>
@@ -25,6 +29,9 @@ const MainRoutes = () => {
 
             <Route element={<ProtectedRoute />}>
                 <Route exact path="/" element={<HomePage />}/>
+                <Route path="/batch-list" element={<BatchViewPage/>} />
+                <Route path="/add-intern" element={<InternAdd/>} />
+
             </Route>
             </Routes>
         
