@@ -71,10 +71,39 @@ class Logout(APIView):
 class ViewInterns(APIView):
 
     def get(self, request):
-        queryset = UserAccount.objects.filter(is_administrator = True, is_admin = False).all().order_by('-date_joined')
-        serialized = UserSerializer(queryset, many=True)
+
+        interns = UserAccount.objects.filter(is_administrator = False, is_admin = False).all().order_by('-date_joined')
+        serialized = UserSerializer(interns, many=True)
 
         return Response(serialized.data)
+    
+class ListMentors(APIView):
+
+    def get(self, request):
+
+        mentors = UserAccount.objects.filter(is_mentor = True, is_administrator = False, is_admin = False).all().order_by('-date_joined')
+        serialized = UserSerializer(mentors, many = True)
+
+        return Response(serialized.data)
+    
+class ListCC(APIView):
+
+    def get(self, request):
+
+        cc = UserAccount.objects.filter(is_cc = True, is_administrator = False, is_admin = False).all().order_by('-date_joined')
+        serialized = UserSerializer(cc, many=True)
+
+        return Response(serialized.data)
+    
+class ListSC(APIView):
+
+    def get(self, request):
+
+        sc = UserAccount.objects.filter(is_sc = True, is_administrator = False, is_admin = False).all().order_by('-date_joined')
+        serialized = UserSerializer(sc, many=True)
+
+        return Response(serialized.data)
+
     
 class CreateBatch(APIView):
 
@@ -140,9 +169,15 @@ class CreateIntern(APIView):
                         from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[user.email],
                         )
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            response_data = {
+                'message':'New intern added.'
+            }
+            return Response(response_data, serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            response_data = {
+                message:'Intern already exists'
+            }
+        return Response(response_data , status=status.HTTP_400_BAD_REQUEST)
 
     
 

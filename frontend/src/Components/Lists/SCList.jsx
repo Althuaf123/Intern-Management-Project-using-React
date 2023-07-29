@@ -23,7 +23,7 @@ const Home = () => {
   useEffect(() => {
     setId(localStorage.getItem('id'))
     axios
-      .get("/api/view/intern")
+      .get("/api/list/sc")
       .then((response) => {
         setDetails(response.data);
         console.log(response);

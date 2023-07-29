@@ -10,6 +10,9 @@ import Login from "../Components/Login/Login";
 
 import HomePage from "../Pages/HomePage";
 import BatchViewPage from "../Pages/BatchViewPage";
+import Mentors from "../Pages/Mentors"
+import CommunicationCoordinators from "../Pages/CommunicationCoordinators"
+import SeniorCoordinators from "../Pages/SeniorCoordinators"
 import InternAdd from "../Pages/InternAdd";
 import Setpassword from "../Components/Password/SetPassword";
 
@@ -31,6 +34,9 @@ const MainRoutes = () => {
                 <Route exact path="/" element={<HomePage />}/>
                 <Route path="/batch-list" element={<BatchViewPage/>} />
                 <Route path="/add-intern" element={<InternAdd/>} />
+                <Route path="/mentors-list" element={<Mentors />} />
+                <Route path="/cc-list" element={<CommunicationCoordinators />} />
+                <Route path="/sc-list" element={<SeniorCoordinators />} />
 
             </Route>
             </Routes>

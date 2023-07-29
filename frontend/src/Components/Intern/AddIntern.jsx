@@ -1,12 +1,21 @@
 import * as React from 'react';
-import { useState } from 'react';
 import axios from '../../axios'
 
-import { Box, TextField, Button, Checkbox, FormControlLabel, Grid, Container, Typography, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Box, TextField, Button, Checkbox, FormControlLabel, Grid, Container, Typography, Select, MenuItem, InputLabel, FormControl, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert'
 
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />
+})
+ 
 function AddIntern () {
 
   const [ batchList, setBatchList ] = React.useState('')
+  const [ snackbarOpen, setSnackbarOpen ] = React.useState(false)
+  const[ snackbarSeverity, setSnackbarSeverity ] = React.useState('error')
+  const [ snackbarMessage, setSnackbarMessage ] = React.useState('')
+
 
   React.useEffect(() => {
     axios.get('api/view/batch-list')
@@ -16,7 +25,7 @@ function AddIntern () {
     }).catch((error) => console.log(error) )
   }, [])
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = React.useState({
         name: '',
         email: '',
         batch_id: '',
@@ -27,7 +36,7 @@ function AddIntern () {
         },
       });
     
-      const [formErrors, setFormErrors] = useState({
+      const [formErrors, setFormErrors] = React.useState({
         name: '',
         email: '',
         batch_id: '',
@@ -43,7 +52,7 @@ function AddIntern () {
       const handleBatchChange = (event) => {
         console.log(event.target)
         setFormData((prevData) => ({ ...prevData, batch_id: event.target.value }))
-        setFormErrors((prevErrors) => ({ ...prevErrors, batch: ''}))
+        setFormErrors((prevErrors) => ({ ...prevErrors, batch_id: ''}))
       }
     
       const handleCheckboxChange = (event) => {
@@ -51,6 +60,10 @@ function AddIntern () {
         setFormData((prevData) => ({ ...prevData, roles: { ...prevData.roles, [name]: checked } }));
         setFormErrors((prevErrors) => ({ ...prevErrors, roles: '' }));
       };
+
+      const handleCloseSnackbar = () => {
+        setSnackbarOpen(false)
+      }
 
       const isValidEmail = (email) => {
 
@@ -79,26 +92,63 @@ function AddIntern () {
     
         if (Object.keys(errors).length > 0) {
           setFormErrors(errors);
-          return;
+          return false;
+        } else {
+          setFormErrors({})
+          return true
         }
 
       }
     
       const handleSubmit = (event) => {
-        event.preventDefault();
 
-        validateData();
-        axios.post('/api/add/intern/',{
-          name: formData.name,
-          email: formData.email,
-          batch_id: formData.batch_id,
-          is_cc: formData.roles.is_cc,
-          is_mentor: formData.roles.is_mentor,
-          is_sc: formData.roles.is_sc,
+        event.preventDefault()
 
-        })
+        const isValid = validateData()
 
-        console.log('Form submitted:', formData);
+        if (isValid) {
+          try {
+          axios.post('/api/add/intern/',{
+
+            name: formData.name,
+            email: formData.email,
+            batch_id: formData.batch_id,
+            is_cc: formData.roles.is_cc,
+            is_mentor: formData.roles.is_mentor,
+            is_sc: formData.roles.is_sc,
+  
+          })
+          .then((response) => {
+
+            setSnackbarSeverity('success')
+            setSnackbarMessage('New intern added')
+            setSnackbarOpen(true)
+
+          })
+          .catch((error) => {
+
+            setSnackbarSeverity('error')
+
+            if (error.response && error.response.data && error.response.message) {
+              setSnackbarMessage(error.response.data.message)
+            } else {
+              setSnackbarMessage('Intern already exists')
+            }
+            
+            setSnackbarOpen(true)
+
+          })
+
+        } catch (error) {
+
+          setSnackbarSeverity('error')
+          setSnackbarMessage('Invalid credentials/intern already exists')
+          setSnackbarOpen(true) 
+        
+        }
+
+        }
+
       };
 
     return(
@@ -146,8 +196,8 @@ function AddIntern () {
               name="batch"
               value={formData.batch_id}
               onChange={handleBatchChange}
-              error={!!formErrors.batch}
-              helperText={formErrors.batch}
+              error={!!formErrors.batch_id}
+              // helperText={formErrors.batch_id}
               sx={{textAlign:'left'}}
             >
               {batchList && batchList.map((batch) => (
@@ -202,6 +252,12 @@ function AddIntern () {
           </Grid>
         </Grid>
       </form>
+      <Snackbar open={ snackbarOpen } autoHideDuration={5000} onClose={ handleCloseSnackbar } >
+
+        <Alert onClose={ handleCloseSnackbar } severity={ snackbarSeverity } >
+          { snackbarMessage }
+        </Alert>
+      </Snackbar>
     </Container>
     </Box>
     )

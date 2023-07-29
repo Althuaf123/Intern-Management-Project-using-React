@@ -51,6 +51,18 @@ function Sidebar({ open, onClose }) {
         console.log('batch page')
     }
 
+    const handleMentors = () => {
+      navigate('/mentors-list')
+    }
+
+    const handleCoordinators = () => {
+      navigate('/cc-list')
+    }
+
+    const handleSeniorCoordinators = () => {
+      navigate('/sc-list')
+    }
+
     const listItemData = [ 
         
         { icon: <HomeWorkTwoToneIcon />, text: 'Home', onClickHandler: handleHome },
@@ -58,9 +70,9 @@ function Sidebar({ open, onClose }) {
         { icon: <AddToPhotosTwoToneIcon />, text: 'Add Batch', onClickHandler: handleAddBatch },
         { icon: <FilterNoneTwoToneIcon />, text: 'Batches', onClickHandler: handleBatch },
         { icon: <PeopleOutlineTwoToneIcon/>, text: 'Interns', onClickHandler: handleHome },
-        { icon: <ManTwoToneIcon />, text: 'Mentors' },
-        { icon: <Man3TwoToneIcon />, text: 'Coordinators' },
-        { icon: <Man4TwoToneIcon />, text: 'Senior Coordinators' },
+        { icon: <ManTwoToneIcon />, text: 'Mentors', onClickHandler: handleMentors },
+        { icon: <Man3TwoToneIcon />, text: 'Coordinators', onClickHandler: handleCoordinators },
+        { icon: <Man4TwoToneIcon />, text: 'Senior Coordinators', onClickHandler: handleSeniorCoordinators },
         
        
     ]
