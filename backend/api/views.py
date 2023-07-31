@@ -45,7 +45,7 @@ class Login(GenericAPIView):
 
             if user is not None:
                 refresh = RefreshToken.for_user(user)
-                serialized_user =  LoginSerializer(user)
+                serialized_user =  UserSerializer(user)
                 return Response({'message':'Successfully Logged In','access' : str(refresh.access_token),'refresh':str(refresh), 'data' : serialized_user.data})
             
             else:

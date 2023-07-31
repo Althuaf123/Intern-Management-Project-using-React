@@ -12,6 +12,7 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
       localStorage.setItem("id", response.data.data.id)
+      localStorage.setItem("name", response.data.data.name)
       console.log(response.data.data.id)
       
       // const users = await axios.get("/api/", {
