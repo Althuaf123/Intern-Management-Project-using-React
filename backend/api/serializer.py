@@ -82,7 +82,7 @@ class BatchCreateSerializer(serializers.ModelSerializer):
         model = Batch
         fields = '__all__'
 
-class BatchEditSerializer(serializers.ModelField):
+class BatchEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Batch
         fields = ['batch_num']

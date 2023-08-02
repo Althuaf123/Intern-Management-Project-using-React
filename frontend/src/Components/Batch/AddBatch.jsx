@@ -39,7 +39,7 @@ function AddBatch( { setOpenDialog } ) {
                 user_id: administratorId,
             })
 
-            if(response.status === 200) {
+            if(response.status === 201) {
                 setOpenDialog(false)
                 console.log('Saved!!')
             }
@@ -57,7 +57,7 @@ function AddBatch( { setOpenDialog } ) {
     <div>
      
       <Dialog open={true} onClose={handleClose}>
-        <DialogTitle>Add New Batch - {administratorId}</DialogTitle>
+        <DialogTitle>Add New Batch</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
