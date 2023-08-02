@@ -53,19 +53,27 @@ class LoginSerializer(serializers.ModelSerializer):
     
 
 
+class UserEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        exclude = ("password",)
+
 class UserSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     def get_image(self, user):
         if user.image:
+            print(user.image)
             image_url = user.image.url
+            print(image_url)
             if image_url.startswith('/media/media'):
                 image_url = image_url.replace('/media/media', '/media')
+                print(image_url)
             return image_url
         else:
             return None
     class Meta:
         model = UserAccount
-        fields = "__all__" 
+        exclude = ("password",) 
 
 
 class BatchCreateSerializer(serializers.ModelSerializer):

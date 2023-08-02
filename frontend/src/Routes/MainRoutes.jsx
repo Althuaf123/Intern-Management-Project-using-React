@@ -15,6 +15,7 @@ import CommunicationCoordinators from "../Pages/CommunicationCoordinators"
 import SeniorCoordinators from "../Pages/SeniorCoordinators"
 import InternAdd from "../Pages/InternAdd";
 import Setpassword from "../Components/Password/SetPassword";
+import ProfilePage from "../Pages/ProfilePage";
 
 const MainRoutes = () => {
     return (
@@ -37,6 +38,7 @@ const MainRoutes = () => {
                 <Route path="/mentors-list" element={<Mentors />} />
                 <Route path="/cc-list" element={<CommunicationCoordinators />} />
                 <Route path="/sc-list" element={<SeniorCoordinators />} />
+                <Route path="/profile-page" element={ <ProfilePage />} />
 
             </Route>
             </Routes>

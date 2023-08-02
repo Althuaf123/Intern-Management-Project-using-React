@@ -45,7 +45,7 @@ class Login(GenericAPIView):
 
             if user is not None:
                 refresh = RefreshToken.for_user(user)
-                serialized_user =  UserSerializer(user)
+                serialized_user =  UserSerializer                   (user)
                 return Response({'message':'Successfully Logged In','access' : str(refresh.access_token),'refresh':str(refresh), 'data' : serialized_user.data})
             
             else:
@@ -214,19 +214,33 @@ class SetPassword(APIView):
         else:
             return Response(serializer.errors,status=400)
 
-        
 
-        
+
 
 
 class GetUser(APIView):
 
     def get(self, request):
 
-        email = request.GET.get('email')
-        user = UserAccount.objects.get(email=email)
+        id = request.query_params.get('id')
+        print(id)
+    
+        user = UserAccount.objects.get(id=id)
         serializer = UserSerializer(user)
         print(request)
         return Response(serializer.data)
 
 
+class EditAdministrator(APIView):
+
+    def patch(self,request, id):
+        print(request.data)
+        # breakpoint()
+        intern = UserAccount.objects.get(id=id)
+        serializer = UserEditSerializer(intern, data=request.data, partial = True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
