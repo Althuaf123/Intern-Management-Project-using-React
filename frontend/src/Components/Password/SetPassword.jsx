@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Grid, Typography, TextField, Button, Container, Box  } from '@mui/material'
+import { Grid, Typography, TextField, Button, Container, Box } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "../../axios";
 
 
@@ -34,8 +36,8 @@ const SetPassword = () => {
 //     }
 //   }, [success]);
 
-  const validateData = (e) => {
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const errors = {}
     if(!user.password){
         errors.password = 'Password required'
@@ -52,15 +54,7 @@ const SetPassword = () => {
     if (Object.keys(errors).length > 0) {
         setDataErrors(errors)
         return
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    validateData()
-
-  
+    } else{
         try{
         axios.post('/api/set_password/',{
             uid:uid,
@@ -73,16 +67,18 @@ const SetPassword = () => {
 
         }).catch((error) => {
             if (error.response.status === 400) {
+              toast.error('Session Expired! Contact admin', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose:3000,
+              })
                 console.log("Error 400")
             }
         })
 
 
         } catch (error) {console.log(error)}
-
-     
-
-  };
+      }
+  }
 
 
   const handleChange = (event) => {
@@ -154,9 +150,11 @@ const SetPassword = () => {
                 Done
               </Button>    
           </Grid>
+    <ToastContainer />
           </Box>
       </Container>
     </Grid>
+    
         </Box>
     )
 }

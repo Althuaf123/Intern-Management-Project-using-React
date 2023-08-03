@@ -9,6 +9,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from .models import *
+from .authorization import *
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -153,7 +154,6 @@ class SetPasswordSerializer(serializers.Serializer):
         fields = '__all__'
 
     def validate(self, attrs):
-        print(attrs)
         password = attrs.get('password')
         token = attrs.get('token')
         uid = attrs.get('uid')
@@ -162,7 +162,9 @@ class SetPasswordSerializer(serializers.Serializer):
             user = UserAccount.objects.get(id = uid_decoded)
             attrs['user_id'] = uid_decoded
             # Validate the token and decode
-            is_token_valid = default_token_generator.check_token(user, token)
+            # is_token_valid = default_token_generator.check_token(user, token)
+            token_generator = CustomToken()
+            is_token_valid = token_generator.check_token(user,token)
             if is_token_valid:
                 try:
                     validate_password(password, user)
