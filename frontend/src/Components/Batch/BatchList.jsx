@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box,Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box,Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch } from '@mui/material';
 import axios from "../../axios";
 import EditBatch from "./EditBatch";
+import AddBatch from "./AddBatch";
 
 import BorderColorTwoToneIcon from '@mui/icons-material/BorderColorTwoTone';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
@@ -10,6 +11,8 @@ function BatchList () {
 
     const [ batchList, setBatchList ] = useState([])
     const [ existingBatch, setExistingBatch ] = useState(null)
+    const [ openDialog, setOpenDialog ] = useState(false)
+    const [ isBatchAdded,setIsBatchAdded ] = useState(false)
 
     useEffect(() => {
         axios.get('api/view/batch-list')
@@ -17,7 +20,7 @@ function BatchList () {
             setBatchList(response.data)
             console.log(response.data)
         }).catch((error) => console.log(error) )
-    }, [])
+    }, [isBatchAdded])
 
     const handleEdit = (id) => {
       const existingBatch = batchList.find((batch) => batch.id === id)
@@ -26,6 +29,16 @@ function BatchList () {
         console.log(`Edit button clicked for ID: ${id}`);
     };
 
+    const handleAddBatch = () => {
+      console.log('add batch on batch list triggered')
+      setIsBatchAdded(false)
+      setOpenDialog(true)
+    }
+
+    const handleBatchAdded = () => {
+      setIsBatchAdded(true)
+      // setOpenDialog(false)
+    }
 
     const handleEditBatchSubmit = (newName) => {
       axios.patch(`api/edit/batch/${existingBatch.id}`, {
@@ -36,6 +49,17 @@ function BatchList () {
         batch.id === existingBatch.id ? {...batch, batch_num: newName}: batch))
       })
       setExistingBatch(null)
+    }
+
+    const handleSwitchChange = (id,isActive) => {
+      axios.patch(`api/edit/batch/${id}`, {
+        is_active: isActive,
+      })
+      .then( () => {
+        setBatchList((prevBatchList) => 
+        prevBatchList.map((batch) => 
+        batch.id === id ? {...batch, is_active: isActive } : batch ))
+      })
     }
 
     const handleDelete = (id) => {
@@ -51,11 +75,38 @@ function BatchList () {
 
     return (
     
-        <Box sx={{ backgroundColor : '#5584B0',height: '100vh', display:'flex', justifyContent:'center', alignItems:'center' }}>
+        <Box sx={{ 
+          backgroundColor : '#5584B0',
+          height: '100vh', 
+          display:'flex', 
+          justifyContent:'center',
+          // alignItems:'center'
+          flexDirection:'column',
+          alignItems:'center',
+
+          // justifyContent:'flex-start',
+          }}>
+          <Box>
+            <Button sx={{
+              display: 'flex',
+              justifyContent:'flex-start',
+              width: '100px',
+              marginTop:'5rem',
+              backgroundColor : '#81C2E6',
+              color:'black',
+              '&:hover':{ boxShadow : '03px 03px 6px rgba(0, 0, 0, 0.6)', backgroundColor: '#81C2E6' }
+              }}
+              onClick={handleAddBatch}
+              >
+              Add Batch
+            </Button>
+          </Box>
+        
         <TableContainer 
         component={Paper}
-        sx={{ backgroundColor: '#5a5a5a', maxWidth: '50%' }}
+        sx={{ backgroundColor: '#5a5a5a', maxWidth: '50%', marginTop:'1rem' }}
         >
+          
       <Table>
         <TableHead>
           <TableRow>
@@ -75,9 +126,14 @@ function BatchList () {
                   <BorderColorTwoToneIcon/>
                 </Button>
                  <span style={{ marginLeft: '5px' }} />
-                <Button color='error' onClick={() => handleDelete(list.id)}>
+                {/* <Button color='error' onClick={() => handleDelete(list.id)}>
                   <DeleteOutlineTwoToneIcon />
-                </Button>
+                </Button> */}
+                <Switch 
+                // disabled={!list.is_active} 
+                checked={list.is_active} 
+                onChange={ () => handleSwitchChange(list.id, !list.is_active) }
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -91,6 +147,8 @@ function BatchList () {
       batchName={existingBatch.batch_num}
       onSubmit = {handleEditBatchSubmit}
       />)}
+
+      {openDialog && <AddBatch setOpenDialog = {setOpenDialog} onBatchAdded = {handleBatchAdded} />}
         </Box>
         
     )

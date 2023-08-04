@@ -22,6 +22,7 @@ const Home = () => {
   
   useEffect(() => {
     setId(localStorage.getItem('id'))
+    // console.log(process.env.REACT_APP_WEBSITE_URL)
     axios
       .get("/api/view/intern")
       .then((response) => {

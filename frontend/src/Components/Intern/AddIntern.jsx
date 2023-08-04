@@ -201,7 +201,11 @@ function AddIntern () {
               sx={{textAlign:'left'}}
             >
               {batchList && batchList.map((batch) => (
-                <MenuItem key={batch?.id} value={batch?.id}>
+                <MenuItem 
+                key={batch?.id} 
+                value={batch?.id}
+                disabled={!batch.is_active}
+                >
                   {batch?.batch_num}
                 </MenuItem>
               ))}

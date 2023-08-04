@@ -86,7 +86,7 @@ class BatchCreateSerializer(serializers.ModelSerializer):
 class BatchEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Batch
-        fields = ['batch_num']
+        fields = ['batch_num','is_active']
 
 class InternCreateSerializer(serializers.ModelSerializer):
 

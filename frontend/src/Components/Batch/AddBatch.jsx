@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from '../../axios'
 
-function AddBatch( { setOpenDialog } ) {
+function AddBatch( { setOpenDialog, onBatchAdded } ) {
 
     const [batchName, setBatchName] = React.useState('')
     const [dataErrors, setDataErrors] = React.useState('')
@@ -41,6 +41,7 @@ function AddBatch( { setOpenDialog } ) {
 
             if(response.status === 201) {
                 setOpenDialog(false)
+                onBatchAdded()
                 console.log('Saved!!')
             }
         } catch (error) {

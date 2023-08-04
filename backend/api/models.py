@@ -74,8 +74,11 @@ class Administrator(models.Model):
 class Batch(models.Model):
     user_id = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     batch_num = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
+    
     def __str__(self):
-        return self.batch_num
+        return f'{self.batch_num} - {self.is_active}'
+    
 class Intern(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     batch_id = models.ForeignKey(Batch,on_delete=models.CASCADE)
