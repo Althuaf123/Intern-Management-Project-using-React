@@ -50,10 +50,10 @@ const Profile = () => {
         setFormData({
           name: name,
           email: email,
-        //   image: image,
+          // image: image,
         });
         
-        setImage(`${baseUrl}${image}`)
+        setImage(`${image}`)
         
       })
       .catch((error) => console.log(error));

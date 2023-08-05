@@ -2,6 +2,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import cloudinary_storage
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,6 +28,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     "corsheaders",
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -107,8 +110,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -182,3 +185,11 @@ EMAIL_HOST_USER = 'bookiess.com@gmail.com'
 EMAIL_HOST_PASSWORD = 'uwquvdbldbefckua'
 DEFAULT_FROM_EMAIL = 'bookiess.com@gmail.com'
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME' : 'dyfya8lyq',
+    'API_KEY' : '647722369916445',
+    'API_SECRET' : 'ilXRjdnG9qOky8_UJ0mmXKUFr7w'
+
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
