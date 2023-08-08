@@ -20,8 +20,8 @@ const Login = () => {
     const dispatch = useDispatch()
     const [snackbar, setSnackbar] = useState(false)
     const [user, setUser] = useState({
-      email: 'kiran@gmail.com',
-      password: 'althuaf@123'
+      email: 'admini@gmail.com',
+      password: 'joel@12345'
     })
 
     const [dataErrors, setDataErrors] = useState(initialError)
