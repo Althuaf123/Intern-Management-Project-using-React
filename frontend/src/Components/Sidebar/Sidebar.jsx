@@ -50,6 +50,10 @@ function Sidebar({ open, onClose }) {
     navigate("/intern-home")
   }
 
+  const handleMessage = () => {
+    console.log('first')
+  }
+
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure?");
     if (confirmed) {

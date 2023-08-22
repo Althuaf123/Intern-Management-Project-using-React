@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'api',
+    'chat',
     'rest_framework',
     'rest_framework_simplejwt',
     "corsheaders",
@@ -62,6 +63,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
+ASGI_APPLICATION = 'backend.asgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+            # "hosts": [("redis://default:OvAbNVKJfkiGbC5Ksb08P3QrxPzQ967D@redis-13666.c305.ap-south-1-1.ec2.cloud.redislabs.com:13666")]
+        },
+    },
+}
 
 
 # Database
