@@ -13,7 +13,9 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem("refresh", response.data.refresh);
       localStorage.setItem("id", response.data.data.id)
       localStorage.setItem("name", response.data.data.name)
-      console.log(response.data.data.id)
+      localStorage.setItem('role',response.data.data.is_administrator)
+      localStorage.setItem("administrator",JSON.stringify(response.data.data))
+      console.log(response.data.data.is_administrator)
       
       // const users = await axios.get("/api/", {
       //   params: {
@@ -25,7 +27,7 @@ export const loginUser = createAsyncThunk(
       // if (response.data.is_administrator===true){
       //   const administrator = await axios.get(`api/get/users/${response.data.id}`)
       //   console.log(administrator)
-      //   localStorage.setItem("administrator",JSON.stringify(administrator.data))
+        
       // }
 
       // console.log(users)

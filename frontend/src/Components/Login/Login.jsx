@@ -20,7 +20,7 @@ const Login = () => {
     const dispatch = useDispatch()
     const [snackbar, setSnackbar] = useState(false)
     const [user, setUser] = useState({
-      email: 'admini@gmail.com',
+      email: 'admini123@gmail.com',
       password: 'joel@12345'
     })
 

@@ -78,7 +78,7 @@ class Batch(models.Model):
     
     def __str__(self):
         return f'{self.batch_num} - {self.is_active}'
-    
+
 class Intern(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     batch_id = models.ForeignKey(Batch,on_delete=models.CASCADE)
@@ -86,3 +86,12 @@ class Intern(models.Model):
 
     def __str__(self):
         return f'{self.user}-{self.batch_id}'
+    
+
+class Tasks(models.Model):
+    intern = models.ForeignKey(Intern,on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    status = models.CharField(default='Pending', max_length=100)
+    remark = models.CharField(max_length=500,null=True)
+   

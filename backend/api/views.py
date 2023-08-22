@@ -193,7 +193,42 @@ class EditIntern(APIView):
         
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
     
+class InternDetailView(APIView):
+    def get(self, request, id):
+        try:
+            intern = Intern.objects.get(user_id=id)
+        except Intern.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
+        serializer = InternDetailSerializer(intern)
+        return Response(serializer.data)
+    
+
+class AssignTask(APIView):
+    def post(self, request,format=None):
+        print(1)
+        serializer = TaskCreateSerializer(data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            print(3)
+            task = Tasks.objects.create(**serializer.validated_data)
+            task.save()
+            return Response({'message': 'Task assigned to intern successfully', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class TaskDetailsView(APIView):
+    def get(self,request,id):
+        try:
+            tasks = Tasks.objects.filter(intern_id = id)
+            serializer = TaskCreateSerializer(tasks, many=True)
+            return Response(serializer.data)
+        except Tasks.DoesNotExist:
+            return Response({'message': 'No tasks found for the intern'}, status=status.HTTP_404_NOT_FOUND)
+
+
+       
 class SetPassword(APIView):
 
     def post(self, request, format=None):

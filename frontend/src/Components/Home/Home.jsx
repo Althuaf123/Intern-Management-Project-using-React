@@ -65,6 +65,10 @@ const Home = () => {
       .catch((error) => console.log(error));
   };
  
+  const handleInternDetails = (intern_id) => {
+    console.log(intern_id)
+    navigate(`/intern-details/${intern_id}`)
+  }
 
   return (
     <Box  
@@ -98,7 +102,7 @@ const Home = () => {
              </Typography>            
           </CardContent>
           <CardActions>
-            <Button size="small">View</Button>
+            <Button size="small" onClick={ () => handleInternDetails(intern.id) }>View</Button>
             <Tooltip title='Message'>
               <Button>
               <EmailOutlinedIcon/>

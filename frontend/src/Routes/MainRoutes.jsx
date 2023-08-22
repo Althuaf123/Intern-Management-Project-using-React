@@ -16,12 +16,15 @@ import SeniorCoordinators from "../Pages/SeniorCoordinators"
 import InternAdd from "../Pages/InternAdd";
 import Setpassword from "../Components/Password/SetPassword";
 import ProfilePage from "../Pages/ProfilePage";
+import InternDetails from "../Pages/InternDetails";
+
+import InternHomePage from "../Pages/InternHomePage";
 
 const MainRoutes = () => {
     return (
         <div>
            
-            <Routes>
+        <Routes>
             <Route path = "/homepage" element={<LandingPage />}/>
             <Route path = "/set-password/:uid/:token" element={<Setpassword />} />
             
@@ -29,6 +32,8 @@ const MainRoutes = () => {
             <Route element={<PublicRoute/>}>
                 <Route path = "/signup" element={<Signup />}/>
                 <Route path = "/login" element={<Login />} />
+                
+               
             </Route>
 
             <Route element={<ProtectedRoute />}>
@@ -39,8 +44,12 @@ const MainRoutes = () => {
                 <Route path="/cc-list" element={<CommunicationCoordinators />} />
                 <Route path="/sc-list" element={<SeniorCoordinators />} />
                 <Route path="/profile-page" element={ <ProfilePage />} />
+                <Route path="/intern-details/:intern_id" element={ <InternDetails /> } />
+                <Route path='/intern-home' element={<InternHomePage />} />
+                
 
             </Route>
+
             </Routes>
         
         </div>

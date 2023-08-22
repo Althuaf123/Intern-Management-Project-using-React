@@ -12,7 +12,7 @@ class CustomToken(PasswordResetTokenGenerator):
         return six.text_type(user.id) + six.text_type(timestamp) + six.text_type(user.is_active)
     
     def make_token(self, user):
-        timestamp = int(datetime.timestamp(datetime.now() + timedelta(seconds=10)))
+        timestamp = int(datetime.timestamp(datetime.now() + timedelta(hours=24)))
         hash_value = self._make_hash_value(user, timestamp)
         return self._make_token_with_timestamp(user, timestamp, hash_value)
     

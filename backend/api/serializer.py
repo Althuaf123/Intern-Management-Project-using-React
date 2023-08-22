@@ -145,6 +145,22 @@ class InternEditSerializer(serializers.ModelSerializer):
 
         return data
  
+class TaskCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tasks
+        fields = '__all__'
+
+
+class InternDetailSerializer (serializers.ModelSerializer) :
+
+    user = UserSerializer()
+    batch_id = BatchCreateSerializer()
+
+    class Meta:
+        model = Intern
+        fields = '__all__'
+
 
 class SetPasswordSerializer(serializers.Serializer):
     password = serializers.CharField()
