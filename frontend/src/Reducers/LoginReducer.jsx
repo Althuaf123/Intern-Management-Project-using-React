@@ -65,6 +65,9 @@ const loginSlice = createSlice({
         localStorage.removeItem("access")
         localStorage.removeItem("refresh")
         localStorage.removeItem("user")
+        localStorage.removeItem("id")
+        localStorage.removeItem("name")
+        localStorage.removeItem('role')
         localStorage.removeItem("administrator")
       },
     setUser:(state,action)=>{

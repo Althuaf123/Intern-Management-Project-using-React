@@ -5,68 +5,154 @@ import axios from "../../axios";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const Body = () => {
-  const [details, setDetails] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState([]);
   const [id, setId] = useState("");
   const [selectedOption, setSelectedOption] = useState("new");
+  const [refreshTasks, setRefreshTasks] = useState(false);
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
 
   useEffect(() => {
-    setId(localStorage.getItem("id"));
-    axios
-      .get("/api/view/intern")
-      .then((response) => {
-        setDetails(response.data);
-        console.log(response);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    
+    const StoredId = localStorage.getItem("id");
+    setId(StoredId)
+    console.log(id)
+    if (StoredId) {
+      axios
+        .get(`/api/view/intern-details/${StoredId}`)
+        .then((response) => {
+          const internId = response.data.id;
+          setId(internId);
+          
+          axios
+            .get(`/api/view/tasks/${internId}`)
+            .then((tasksResponse) => {
+              setTasks(tasksResponse.data);
+              console.log(tasksResponse.data);
+            })
+            .catch((error) => console.error(error));
+        })
+        .catch((error) => console.error(error));
+    }
+    setRefreshTasks(false);
+  }, [refreshTasks]);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
 
+  const handleStatusChange = (id, status) => {
+    axios.post(`api/edit/task/${id}`,{
+      status : status
+    })
+    .then(() => {
+      setRefreshTasks(true);
+    })
+    .catch((error) => console.error(error));
+  }
+
   const renderCardContents = () => {
     if (selectedOption === "new") {
-      return (
-        <Card>
+      const newTasks = tasks.filter((task) => task.status === "Pending");
+
+      if (newTasks.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary">
+            No tasks available.
+          </Typography>
+        );
+      }
+  
+      return newTasks.map((task) => (
+        <Card key={task.id} style={{ marginBottom : "10px" }}>
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Option 1 Content
-            </Typography>
+              <Typography key={task.id} variant="body2" color="text.secondary">
+                Title: {task.title} | Description: {task.description}
+              </Typography>
+              <div style={{ marginTop: '10px' }}>
+          {task.status === 'Pending' && (
+            <button
+              onClick={() => handleStatusChange(task.id, 'Ongoing')}
+              style={{
+                backgroundColor: "#FFFFFF",
+                color: "purple",
+                padding: "5px 10px",
+                borderRadius: "5px",
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Mark as Ongoing
+            </button>
+          )}
+          </div>
           </CardContent>
         </Card>
-      );
+      ));
     } else if (selectedOption === "ongoing") {
-      return (
-        <Card>
+      const ongoingTasks = tasks.filter((task) => task.status === "Ongoing");
+
+      if (ongoingTasks.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary">
+            No tasks available.
+          </Typography>
+        );
+      }
+  
+      return ongoingTasks.map((task) => (
+        <Card key={task.id} style={{ marginBottom : "10px" }}>
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Option 2 Content
-            </Typography>
+              <Typography key={task.id} variant="body2" color="text.secondary">
+                Title: {task.title} | Description: {task.description}
+              </Typography>
+              <div style={{ marginTop: '10px' }}>
+          {task.status === 'Ongoing' && (
+            <button
+              onClick={() => handleStatusChange(task.id, 'Completed')}
+              style={{
+                backgroundColor: "#FFFFFF",
+                color: "purple",
+                padding: "5px 10px",
+                borderRadius: "5px",
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Mark as Completed
+            </button>
+          )}
+          </div>
           </CardContent>
         </Card>
-      );
+      ));
     } else if (selectedOption === "completed") {
-      return (
-        <Card>
+      const completedTasks = tasks.filter((task) => task.status === "Completed");
+
+      if (completedTasks.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary">
+            No tasks available.
+          </Typography>
+        );
+      }
+
+      return completedTasks.map((task) => (
+        <Card key={task.id} style={{ marginBottom : "10px" }}>
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Option 3 Content
-            </Typography>
+              <Typography key={task.id} variant="body2" color="text.secondary">
+                Title: {task.title} | Description: {task.description}
+              </Typography>
           </CardContent>
         </Card>
-      );
+      ));
     }
   };
-
   return (
     <Box
       sx={{

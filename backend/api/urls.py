@@ -21,4 +21,5 @@ urlpatterns = [
     path('edit/administrator/<id>',EditAdministrator.as_view()),
     path('add/tasks/',AssignTask.as_view()),
     path('view/tasks/<id>',TaskDetailsView.as_view()),
+    path('edit/task/<id>',TaskUpdateView.as_view()),
 ]

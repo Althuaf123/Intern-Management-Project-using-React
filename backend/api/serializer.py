@@ -151,6 +151,11 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         model = Tasks
         fields = '__all__'
 
+class TaskUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tasks
+        fields = '__all__'
 
 class InternDetailSerializer (serializers.ModelSerializer) :
 

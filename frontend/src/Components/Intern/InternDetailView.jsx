@@ -11,7 +11,7 @@ const InternDetailsView = ( {intern_id} ) => {
 
   useEffect(() => {
     // const id = localStorage.getItem('id')
-    const id = 4
+    const id = 5
     // console.log(props)
     console.log(intern_id)
     axios
@@ -26,7 +26,7 @@ const InternDetailsView = ( {intern_id} ) => {
     setSelectedOption(option);
   };
 
-  
+
   return (
     <Box
       sx={{

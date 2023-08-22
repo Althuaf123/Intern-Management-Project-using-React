@@ -227,7 +227,15 @@ class TaskDetailsView(APIView):
         except Tasks.DoesNotExist:
             return Response({'message': 'No tasks found for the intern'}, status=status.HTTP_404_NOT_FOUND)
 
-
+class TaskUpdateView(APIView):
+    def post(self,request,id):
+        task = Tasks.objects.get(id=id)
+        serializer = TaskUpdateSerializer(task, data=request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response({'message': 'Error occured'}, status=status.HTTP_400_BAD_REQUEST )
+        
        
 class SetPassword(APIView):
 

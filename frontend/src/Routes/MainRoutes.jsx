@@ -2,11 +2,13 @@ import React from "react";
 import { Route, Routes } from 'react-router-dom';
 import PublicRoute from "../utils/PublicRoutes";
 import ProtectedRoute from '../utils/ProtectedRoute'
+import AdminProtectedRoute from "../utils/AdminProtectedRoute";
 
 
 import LandingPage from "../Pages/LandingPage";
 import Signup from "../Components/Signup/Signup";
 import Login from "../Components/Login/Login";
+import Unauthorized from "../Components/Extras/Unauthorized";
 
 import HomePage from "../Pages/HomePage";
 import BatchViewPage from "../Pages/BatchViewPage";
@@ -27,6 +29,7 @@ const MainRoutes = () => {
         <Routes>
             <Route path = "/homepage" element={<LandingPage />}/>
             <Route path = "/set-password/:uid/:token" element={<Setpassword />} />
+            <Route path = "/not-authorized" element={<Unauthorized />} />
             
             
             <Route element={<PublicRoute/>}>
@@ -37,16 +40,22 @@ const MainRoutes = () => {
             </Route>
 
             <Route element={<ProtectedRoute />}>
-                <Route exact path="/" element={<HomePage />}/>
+               
+                <Route path='/intern-home' element={<InternHomePage />} />
+                <Route path="/profile-page" element={ <ProfilePage />} />
+
+            </Route>
+
+            <Route element={<AdminProtectedRoute />}>
+
+                 <Route exact path="/" element={<HomePage />}/>
                 <Route path="/batch-list" element={<BatchViewPage/>} />
                 <Route path="/add-intern" element={<InternAdd/>} />
                 <Route path="/mentors-list" element={<Mentors />} />
                 <Route path="/cc-list" element={<CommunicationCoordinators />} />
                 <Route path="/sc-list" element={<SeniorCoordinators />} />
-                <Route path="/profile-page" element={ <ProfilePage />} />
-                <Route path="/intern-details/:intern_id" element={ <InternDetails /> } />
-                <Route path='/intern-home' element={<InternHomePage />} />
                 
+                <Route path="/intern-details/:intern_id" element={ <InternDetails /> } />
 
             </Route>
 

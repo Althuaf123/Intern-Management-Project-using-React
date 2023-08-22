@@ -46,6 +46,10 @@ function Sidebar({ open, onClose }) {
     navigate("/");
   };
 
+  const handleInternHome = () => {
+    navigate("/intern-home")
+  }
+
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure?");
     if (confirmed) {
@@ -122,13 +126,19 @@ function Sidebar({ open, onClose }) {
   const internListItems = [
     { icon: <HomeWorkTwoToneIcon />, 
     text: "Home", 
-    onClickHandler: handleHome 
+    onClickHandler: handleInternHome 
     },
     
     {
       icon: <FilterNoneTwoToneIcon />,
       text: " Tasks",
-      // onClickHandler: handleBatch,
+      onClickHandler: handleInternHome 
+    },
+
+    {
+      icon: <FilterNoneTwoToneIcon />,
+      text: "Contact Administrator",
+      onClickHandler: handleMessage
     },
       
   ];
