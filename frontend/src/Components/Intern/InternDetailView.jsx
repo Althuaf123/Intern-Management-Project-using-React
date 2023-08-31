@@ -4,18 +4,19 @@ import axios from "../../axios";
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import ProfileSection from "./ProfileSection";
 import TaskSection from "./TaskSection";
+import { useLocation } from 'react-router-dom';
 
-const InternDetailsView = ( {intern_id} ) => {
+const InternDetailsView = ( intern_id ) => {
   const [details, setDetails] = useState([]);
   const [selectedOption, setSelectedOption] = useState("profile");
+  const location = useLocation()
 
   useEffect(() => {
-    // const id = localStorage.getItem('id')
-    const id = 5
-    // console.log(props)
-    console.log(intern_id)
+    
+    const intern_id = new URLSearchParams(location.search).get("intern_id");
+
     axios
-      .get(`/api/view/intern-details/${id}`)
+      .get(`/api/view/intern-details/${intern_id}`)
       .then((response) => {
         setDetails(response.data);
       })

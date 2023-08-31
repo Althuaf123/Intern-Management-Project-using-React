@@ -67,7 +67,7 @@ const Home = () => {
  
   const handleInternDetails = (intern_id) => {
     console.log(intern_id)
-    navigate(`/intern-details/${intern_id}`)
+    navigate(`/intern-details?intern_id=${intern_id}`)
   }
 
   return (

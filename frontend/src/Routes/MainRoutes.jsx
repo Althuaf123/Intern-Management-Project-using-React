@@ -21,6 +21,7 @@ import ProfilePage from "../Pages/ProfilePage";
 import InternDetails from "../Pages/InternDetails";
 
 import InternHomePage from "../Pages/InternHomePage";
+import Chat from "../Components/Chat/Chat";
 
 const MainRoutes = () => {
     return (
@@ -43,7 +44,7 @@ const MainRoutes = () => {
                
                 <Route path='/intern-home' element={<InternHomePage />} />
                 <Route path="/profile-page" element={ <ProfilePage />} />
-
+                <Route path="/chat" element={ <Chat />} />
             </Route>
 
             <Route element={<AdminProtectedRoute />}>
@@ -55,7 +56,7 @@ const MainRoutes = () => {
                 <Route path="/cc-list" element={<CommunicationCoordinators />} />
                 <Route path="/sc-list" element={<SeniorCoordinators />} />
                 
-                <Route path="/intern-details/:intern_id" element={ <InternDetails /> } />
+                <Route path="/intern-details" element={ <InternDetails /> } />
 
             </Route>
 
