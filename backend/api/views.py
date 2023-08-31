@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from .serializer import *
 from .models import *
 from .authorization import *
+from .signals import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from .renderers import UserRenderer
 from django.utils.encoding import force_str
@@ -154,28 +155,15 @@ class CreateIntern(APIView):
 
         if serializer.is_valid():
             intern = serializer.save()
+            create_intern.send(sender=self.__class__, user=user)
 
-            uid = urlsafe_base64_encode(force_bytes(user.id))
-            token_generator = CustomToken()
-            token = token_generator.make_token(user)
-            # token = default_token_generator.make_token(user)
-            # reset_url = reverse('password_reset_confirm', args=[uid, token])
-            subject = 'MEG - Set new password'
-            message = 'Click teh link below to set your password.\n\n'
-            message += f'http://localhost:3000/set-password/{uid}/{token}'
-            send_mail(
-                        subject=subject,
-                        message=message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[user.email],
-                        )
             response_data = {
                 'message':'New intern added.'
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             response_data = {
-                message:'Intern already exists'
+                'message':'Intern already exists'
             }
         return Response(response_data , status=status.HTTP_400_BAD_REQUEST)
 
@@ -247,6 +235,7 @@ class SetPassword(APIView):
 
             user.set_password(password) 
             user.save()
+            notification_email.send(sender=self.__class__, user=user)
             res = {
                 "email":user.email,
                 'message':"Password set successfully"
