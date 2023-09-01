@@ -74,6 +74,7 @@ class Administrator(models.Model):
 class Batch(models.Model):
     user_id = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     batch_num = models.CharField(max_length=50)
+    batch_size = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -86,6 +87,15 @@ class Intern(models.Model):
 
     def __str__(self):
         return f'{self.user}-{self.batch_id}'
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        intern_count = Intern.objects.filter(batch_id=self.batch_id).count()
+
+        if intern_count >= self.batch_id.batch_size:
+            self.batch_id.is_active = False
+            self.batch_id.save()
     
 
 class Tasks(models.Model):

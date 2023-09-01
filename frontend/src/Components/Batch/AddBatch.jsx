@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,9 +11,16 @@ import axios from '../../axios'
 
 function AddBatch( { setOpenDialog, onBatchAdded } ) {
 
-    const [batchName, setBatchName] = React.useState('')
-    const [dataErrors, setDataErrors] = React.useState('')
     const [administratorId, setAdministratorId] = React.useState('')
+    const [formData, setFormData] = React.useState({
+      batchName:'',
+      batchSize:''
+    })
+
+    const [formErrors, setFormErrors] = React.useState({
+      batchName:'',
+      batchSize:''
+    })
 
   
     useEffect(() => {
@@ -24,18 +32,43 @@ function AddBatch( { setOpenDialog, onBatchAdded } ) {
   };
 
   const handleInputChange = (event) => {
-    setBatchName(event.target.value)
-    setDataErrors('')
+    const { name, value } = event.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   }
 
-  const handleSubmit = async () => {
-      if (!batchName) {
-        setDataErrors('Field cannot be empty!')
-      }else{
+
+  const validateData = (e) => {
+    let errors = {}
+
+    if (!formData.batchName) {
+      errors.batchName = 'Field caannot be empty'
+    }
+
+    if (!formData.batchSize) {
+      errors.batchSize = 'Field cannot be empty'
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return false;
+    } else {
+      setFormErrors({})
+      return true
+    }
+  }
+  const handleSubmit = async (event) => {
+
+    event.preventDefault()
+
+    const isValid = validateData()
+
+    if (isValid) {
         
         try{
             const response = await axios.post('api/add/batch/', {
-                batch_num: batchName,
+                batch_num: formData.batchName,
+                batch_size: formData.batchSize,
                 user_id: administratorId,
             })
 
@@ -46,7 +79,7 @@ function AddBatch( { setOpenDialog, onBatchAdded } ) {
             }
         } catch (error) {
             if (error.reponse) {
-                setDataErrors(error.response.data)
+                setFormErrors(error.response.data)
             } else {
                 console.error(error)
             }
@@ -64,14 +97,29 @@ function AddBatch( { setOpenDialog, onBatchAdded } ) {
             autoFocus
             margin="dense"
             id="name"
+            name='batchName'
             label="Batch Name"
             type="text"
             fullWidth
             variant="standard"
-            value={batchName}
+            value={formData.batchName}
             onChange={handleInputChange}
-            error={!!dataErrors}
-            helperText={dataErrors}
+            error={!!formErrors}
+            helperText={formErrors.batchName}
+            
+          />
+          <TextField
+            margin="dense"
+            id="name"
+            name='batchSize'
+            label="Batch Size"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={formData.batchSize}
+            onChange={handleInputChange}
+            error={!!formErrors}
+            helperText={formErrors.batchSize}
             
           />
         </DialogContent>
