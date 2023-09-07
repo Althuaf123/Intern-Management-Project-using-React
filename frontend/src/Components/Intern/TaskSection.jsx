@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, Link } from "@mui/material";
 import AddTaskModal from "./TaskCreation";
 import axios from "../../axios";
 
@@ -27,6 +27,14 @@ const TaskSection = ({ details }) => {
     setOpenTaskDetailsPopup(false);
   };
   
+  const generateFileDownloadLink = (fileUrl) => {
+    return (
+      <Link href={fileUrl} target="_blank" rel="noopener noreferrer">
+        Download File
+      </Link>
+    );
+
+  }
 
 
   useEffect(() => {
@@ -102,7 +110,12 @@ const TaskSection = ({ details }) => {
       <Typography variant="body1" sx={{ color: 'purple' }}>Title:</Typography> {selectedTask.title}<br />
       <br /><Typography variant="body1" sx={{ color: 'purple' }}>Description:</Typography> {selectedTask.description}<br />
       <br /><Typography variant="body1" sx={{ color: 'purple' }}>Status:</Typography> {selectedTask.status}<br />
-      <br /><Typography variant="body1" sx={{ color: 'purple' }}>Remarks:</Typography> {selectedTask.remarks}
+      <br /><Typography variant="body1" sx={{ color: 'purple' }}>Remarks:</Typography> {selectedTask.remark}
+      <br /><Typography variant="body1" sx={{ color: 'purple' }}>File:</Typography> {selectedTask.file ? (
+                  generateFileDownloadLink(selectedTask.file)
+                ) : (
+                  "No file uploaded"
+                )}
     </div>
     
     )}

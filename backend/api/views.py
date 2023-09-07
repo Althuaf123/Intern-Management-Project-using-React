@@ -218,6 +218,7 @@ class TaskDetailsView(APIView):
 class TaskUpdateView(APIView):
     def post(self,request,id):
         task = Tasks.objects.get(id=id)
+        print(request.data)
         serializer = TaskUpdateSerializer(task, data=request.data, partial = True)
         if serializer.is_valid():
             serializer.save()

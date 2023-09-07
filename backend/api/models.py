@@ -104,4 +104,5 @@ class Tasks(models.Model):
     description = models.CharField(max_length=500)
     status = models.CharField(default='Pending', max_length=100)
     remark = models.CharField(max_length=500,null=True)
+    file = models.FileField(upload_to='files/',blank=True, null=True)
    

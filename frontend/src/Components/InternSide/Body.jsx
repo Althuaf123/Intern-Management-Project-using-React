@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography, TextField, Button, Modal } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
@@ -12,6 +12,12 @@ const Body = () => {
   const [id, setId] = useState("");
   const [selectedOption, setSelectedOption] = useState("new");
   const [refreshTasks, setRefreshTasks] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [remark,setRemark] = useState('');
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedTaskId, setSelectedTaskId] = useState([]);
+  const [descriptionError, setDescriptionError] = useState('')
+  const fileRef = React.useRef()
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
 
@@ -52,6 +58,72 @@ const Body = () => {
       setRefreshTasks(true);
     })
     .catch((error) => console.error(error));
+  }
+
+  const openModal = (taskId) => {
+    setSelectedTaskId(taskId)
+    setModalOpen(true);
+  }
+
+  const closeModal = () => {
+    setModalOpen(false);
+  }
+
+  const handleDescriptionChange = (event) => {
+    setRemark(event.target.value)
+  }
+
+  const handleFileChange = (e) => {
+    const file = URL.createObjectURL(e.target.files[0])
+    setSelectedFiles(file)
+    
+    if (file) {
+      setFormData({ ...formData, file: file })
+    }
+  }
+
+  const [formData, setFormData] = React.useState({
+    status:'',
+    remark:'',
+    file:'',
+  })
+
+  const handleSubmit = () => {
+
+  let descriptionError = '';
+  let fileError = '';
+
+  if (!remark) {
+    descriptionError = 'Description is required.';
+  }
+
+  if (descriptionError) {
+
+    setDescriptionError(descriptionError);
+    return;
+  }
+
+  setDescriptionError('');
+
+    const file = fileRef.current.files[0]
+    const _form = new FormData()
+    _form.append('remark', remark)
+    _form.append('status','Completed')
+    if (fileRef.current.files.length > 0) {
+      console.log('file ok')
+      _form.append('file',file)
+    }
+    axios.post(`api/edit/task/${selectedTaskId}`,
+    _form, {
+      headers: {
+        "Content-Type":"multipart/form-data"
+      }
+    })
+    .then(() => {
+      setRefreshTasks(true)
+      closeModal()
+    })
+    .catch((error) => console.error(error))
   }
 
   const renderCardContents = () => {
@@ -113,7 +185,9 @@ const Body = () => {
               <div style={{ marginTop: '10px' }}>
           {task.status === 'Ongoing' && (
             <button
-              onClick={() => handleStatusChange(task.id, 'Completed')}
+              onClick={() => {
+                openModal(task.id);
+              }}
               style={{
                 backgroundColor: "#FFFFFF",
                 color: "purple",
@@ -225,6 +299,47 @@ const Body = () => {
           {renderCardContents()}
         </Paper>
       </Grid>
+      <Modal open={modalOpen} onClose={closeModal}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "white",
+          boxShadow: 24,
+          p: 4,
+          minWidth: 300,
+          maxWidth: 500,
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Mark as Completed
+        </Typography>
+        <TextField
+          label="Description"
+          name= 'remark'
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
+          value={remark}
+          onChange={handleDescriptionChange}
+          helperText={descriptionError}
+        />
+          <input
+            type="file"
+            name="file"
+            multiple
+            onChange={handleFileChange}
+            ref={fileRef}
+          />
+
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          Submit
+        </Button>
+      </Box>
+    </Modal>
     </Box>
   );
 };
