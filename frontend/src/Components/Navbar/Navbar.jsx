@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../Reducers/LoginReducer';
-import { AppBar, Toolbar, IconButton, Typography, Box, Menu, MenuItem,} from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box, Menu, MenuItem, Tooltip} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
 import Sidebar from '../Sidebar/Sidebar';
 
@@ -54,16 +55,18 @@ useEffect (() => {
     <Box sx={{flexGrow: 1}}>
       <AppBar sx={{ backgroundColor : '#FAFAF5' }}  position="fixed">
         <Toolbar>
+          <Tooltip title='Menu'>
           <IconButton
             size="large"
             edge="start"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 0 }}
             onClick={handleSidebarToggle}
           >
-            <MenuIcon />
+           <AppsIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color : '#1F1F29' }} textAlign={'left'}>
+          </Tooltip>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color : '#1F1F29', fontFamily:'serif' }} textAlign={'left'}>
             MEG
           </Typography>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, color : '#1F1F29' }} textAlign={'right'}>

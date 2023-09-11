@@ -24,6 +24,7 @@ import FilterNoneTwoToneIcon from "@mui/icons-material/FilterNoneTwoTone";
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
 import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
 import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import ForumIcon from '@mui/icons-material/Forum';
 import axios from "../../axios";
 
 function Sidebar({ open, onClose }) {
@@ -50,9 +51,6 @@ function Sidebar({ open, onClose }) {
     navigate("/intern-home")
   }
 
-  const handleMessage = () => {
-    console.log('first')
-  }
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure?");
@@ -75,6 +73,10 @@ function Sidebar({ open, onClose }) {
     navigate("/batch-list");
     console.log("batch page");
   };
+
+  const handleChat = () => {
+    navigate("/chat");
+  }
 
   const handleMentors = () => {
     navigate("/mentors-list");
@@ -104,6 +106,11 @@ function Sidebar({ open, onClose }) {
       icon: <FilterNoneTwoToneIcon />,
       text: "Batches",
       onClickHandler: handleBatch,
+    },
+    {
+      icon: <ForumIcon />,
+      text: "Chat",
+      onClickHandler: handleChat,
     },
     {
       icon: <PeopleOutlineTwoToneIcon />,
@@ -140,9 +147,9 @@ function Sidebar({ open, onClose }) {
     },
 
     {
-      icon: <FilterNoneTwoToneIcon />,
+      icon: <ForumIcon />,
       text: "Contact Administrator",
-      onClickHandler: handleMessage
+      onClickHandler: handleChat
     },
       
   ];

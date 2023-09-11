@@ -110,7 +110,7 @@ const TaskSection = ({ details }) => {
       <Typography variant="body1" sx={{ color: 'purple' }}>Title:</Typography> {selectedTask.title}<br />
       <br /><Typography variant="body1" sx={{ color: 'purple' }}>Description:</Typography> {selectedTask.description}<br />
       <br /><Typography variant="body1" sx={{ color: 'purple' }}>Status:</Typography> {selectedTask.status}<br />
-      <br /><Typography variant="body1" sx={{ color: 'purple' }}>Remarks:</Typography> {selectedTask.remark}
+      <br /><Typography variant="body1" sx={{ color: 'purple' }}>Remarks:</Typography> {selectedTask.remark}<br />
       <br /><Typography variant="body1" sx={{ color: 'purple' }}>File:</Typography> {selectedTask.file ? (
                   generateFileDownloadLink(selectedTask.file)
                 ) : (

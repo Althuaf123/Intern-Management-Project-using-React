@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "../../axios";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import ProfileSection from "./ProfileSection";
 import TaskSection from "./TaskSection";
 import { useLocation } from 'react-router-dom';
+import Chat from "../Chat/Chat";
 
 const InternDetailsView = ( intern_id ) => {
   const [details, setDetails] = useState([]);
@@ -44,20 +44,28 @@ const InternDetailsView = ( intern_id ) => {
         <Button
           variant={selectedOption === "profile" ? "contained" : "outlined"}
           onClick={() => handleOptionChange("profile")}
-          style={{ marginRight: "10px", color:'#ffff' }}
+          style={{ marginRight: "10px", color:'#1F1F29', backgroundColor:'#C5DFF8' }}
         >
           Profile
         </Button>
         <Button
           variant={selectedOption === "task" ? "contained" : "outlined"}
           onClick={() => handleOptionChange("task")}
-          style={{ color:'#ffff' }}
+          style={{ marginRight: "10px", color:'#1F1F29', backgroundColor:'#C5DFF8' }}
         >
           Task
+        </Button>
+        <Button
+          variant={selectedOption === "chat" ? "contained" : "outlined"}
+          onClick={() => handleOptionChange("chat")}
+          style={{ color:'#1F1F29', backgroundColor:'#C5DFF8' }}
+        >
+          Chat
         </Button>
       </Box>
       {selectedOption === "profile" && <ProfileSection details={details} />}
       {selectedOption === "task" && <TaskSection details={details} />}
+      {selectedOption === 'chat' && <Chat details={details} />}
     </Box>
   );
 };

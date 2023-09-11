@@ -21,19 +21,20 @@ import ProfilePage from "../Pages/ProfilePage";
 import InternDetails from "../Pages/InternDetails";
 
 import InternHomePage from "../Pages/InternHomePage";
-import Chat from "../Components/Chat/Chat";
+import ChatPage from "../Pages/ChatPage";
 
 const MainRoutes = () => {
     return (
         <div>
            
         <Routes>
-            <Route path = "/homepage" element={<LandingPage />}/>
+            
             <Route path = "/set-password/:uid/:token" element={<Setpassword />} />
             <Route path = "/not-authorized" element={<Unauthorized />} />
             
             
             <Route element={<PublicRoute/>}>
+                <Route path = "/homepage" element={<LandingPage />}/>
                 <Route path = "/signup" element={<Signup />}/>
                 <Route path = "/login" element={<Login />} />
                 
@@ -44,7 +45,7 @@ const MainRoutes = () => {
                
                 <Route path='/intern-home' element={<InternHomePage />} />
                 <Route path="/profile-page" element={ <ProfilePage />} />
-                <Route path="/chat" element={ <Chat />} />
+                <Route path="/chat" element={ <ChatPage />} />
             </Route>
 
             <Route element={<AdminProtectedRoute />}>

@@ -7,7 +7,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 const ProfileSection = ({ details }) => {
   const user = details.user;
   const batch = details.batch_id;
-  // console.log(details)
+
 
   return (
     <Box

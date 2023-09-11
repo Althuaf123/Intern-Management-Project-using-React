@@ -89,7 +89,7 @@ const Home = () => {
                 component="img"
                 alt="profile-pic"
                 height="200"
-                image={Profile}
+                image={intern.image || Profile}
             />
           <CardContent>
             <Typography textAlign='center' gutterBottom variant="h5" component="div">
